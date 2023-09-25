@@ -7,7 +7,8 @@ use Carbon\Carbon;
 use Vinelab\NeoEloquent\Query\Builder;
 use Vinelab\NeoEloquent\Query\Expression;
 
-abstract class Grammar
+use Illuminate\Database\Grammar as BaseGrammar;
+abstract class Grammar extends BaseGrammar
 {
     /**
      * The Query builder instance.
