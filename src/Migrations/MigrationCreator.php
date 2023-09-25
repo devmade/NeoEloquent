@@ -15,7 +15,7 @@ class MigrationCreator extends IlluminateMigrationCreator
      *
      * @return string
      */
-    protected function populateStub($name, $stub, $label)
+    protected function populateStub($name, $stub, $label = null)
     {
         $stub = str_replace('{{class}}', studly_case($name), $stub);
 
