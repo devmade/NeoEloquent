@@ -31,28 +31,28 @@ class Builder extends BaseBuilder
      *
      * @var Vinelab\NeoEloquent\Connection
      */
-    protected $connection;
+    public $connection;
 
     /**
      * The database active client handler.
      *
      * @var Neoxygen\NeoClient\Client
      */
-    protected $client;
+    public $client;
 
     /**
      * The database query grammar instance.
      *
      * @var \Vinelab\NeoEloquent\Query\Grammars\Grammar
      */
-    protected $grammar;
+    public $grammar;
 
     /**
      * The database query post processor instance.
      *
      * @var \Vinelab\NeoEloquent\Query\Processors\Processor
      */
-    protected $processor;
+    public $processor;
 
     /**
      * The matches constraints for the query.
@@ -73,7 +73,7 @@ class Builder extends BaseBuilder
      *
      * @var array
      */
-    protected $bindings = array(
+    public $bindings = array(
         'matches' => [],
         'select' => [],
         'join' => [],
@@ -87,7 +87,7 @@ class Builder extends BaseBuilder
      *
      * @var array
      */
-    protected $operators = array(
+    public $operators = array(
         '+', '-', '*', '/', '%', '^',    // Mathematical
         '=', '<>', '<', '>', '<=', '>=', // Comparison
         'is null', 'is not null',
@@ -206,14 +206,14 @@ class Builder extends BaseBuilder
      *
      * @var array
      */
-    protected $backups = [];
+    public $backups = [];
 
     /**
      * The binding backups currently in use.
      *
      * @var array
      */
-    protected $bindingBackups = [];
+    public $bindingBackups = [];
 
     /**
      * Create a new query builder instance.
