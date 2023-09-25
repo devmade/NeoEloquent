@@ -22,7 +22,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 use Vinelab\NeoEloquent\Traits\ResultTrait;
 
-class Builder extends BaseBuilder
+class Builder implements BaseBuilder
 {
     use ResultTrait;
 
