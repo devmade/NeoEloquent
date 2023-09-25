@@ -60,5 +60,10 @@
                 "Vinelab\\NeoEloquent\\NeoEloquentServiceProvider"
             ]
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
