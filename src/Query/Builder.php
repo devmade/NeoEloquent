@@ -19,9 +19,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Database\Query\Builder as BaseBuilder;
 use Vinelab\NeoEloquent\Traits\ResultTrait;
 
-class Builder
+class Builder extends BaseBuilder
 {
     use ResultTrait;
 
