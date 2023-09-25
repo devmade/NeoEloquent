@@ -704,7 +704,7 @@ class CypherGrammar extends Grammar
      *
      * @return string
      */
-    protected function compileHavings(Builder $query, $havings)
+    protected function compileHavings(Builder $query, $havings = null)
     {
         $cypher = implode(' ', array_map([$this, 'compileHaving'], $havings));
 
