@@ -312,7 +312,7 @@ class CypherGrammar extends Grammar
      *
      * @return string
      */
-    protected function compileWheres(Builder $query)
+    public function compileWheres(Builder $query)
     {
         $cypher = array();
 
@@ -1106,7 +1106,7 @@ class CypherGrammar extends Grammar
         return $cypher;
     }
 
-    public function compileAggregate(Builder $query, $aggregate)
+    protected function compileAggregate(Builder $query, $aggregate)
     {
         $distinct = null;
         $function = $aggregate['function'];
