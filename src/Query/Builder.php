@@ -19,9 +19,10 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Database\Query\Builder as BaseBuilder;
 use Vinelab\NeoEloquent\Traits\ResultTrait;
 
-class Builder
+class Builder implements BaseBuilder
 {
     use ResultTrait;
 
@@ -30,28 +31,28 @@ class Builder
      *
      * @var Vinelab\NeoEloquent\Connection
      */
-    protected $connection;
+    public $connection;
 
     /**
      * The database active client handler.
      *
      * @var Neoxygen\NeoClient\Client
      */
-    protected $client;
+    public $client;
 
     /**
      * The database query grammar instance.
      *
      * @var \Vinelab\NeoEloquent\Query\Grammars\Grammar
      */
-    protected $grammar;
+    public $grammar;
 
     /**
      * The database query post processor instance.
      *
      * @var \Vinelab\NeoEloquent\Query\Processors\Processor
      */
-    protected $processor;
+    public $processor;
 
     /**
      * The matches constraints for the query.
@@ -72,7 +73,7 @@ class Builder
      *
      * @var array
      */
-    protected $bindings = array(
+    public $bindings = array(
         'matches' => [],
         'select' => [],
         'join' => [],
@@ -86,7 +87,7 @@ class Builder
      *
      * @var array
      */
-    protected $operators = array(
+    public $operators = array(
         '+', '-', '*', '/', '%', '^',    // Mathematical
         '=', '<>', '<', '>', '<=', '>=', // Comparison
         'is null', 'is not null',
@@ -205,14 +206,14 @@ class Builder
      *
      * @var array
      */
-    protected $backups = [];
+    public $backups = [];
 
     /**
      * The binding backups currently in use.
      *
      * @var array
      */
-    protected $bindingBackups = [];
+    public $bindingBackups = [];
 
     /**
      * Create a new query builder instance.
@@ -326,7 +327,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function from($label)
+    public function from($label, $as = null)
     {
         $this->from = $label;
 
@@ -562,7 +563,7 @@ class Builder
      *
      * @return $this
      */
-    public function whereRaw($sql, array $bindings = [], $boolean = 'and')
+    public function whereRaw($sql, $bindings = [], $boolean = 'and')
     {
         $type = 'raw';
 
@@ -581,7 +582,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function orWhereRaw($sql, array $bindings = [])
+    public function orWhereRaw($sql, $bindings = [])
     {
         return $this->whereRaw($sql, $bindings, 'or');
     }
@@ -689,7 +690,7 @@ class Builder
      *
      * @return $this
      */
-    protected function whereSub($column, $operator, Closure $callback, $boolean)
+    protected function whereSub($column, $operator, $callback, $boolean)
     {
         $type = 'Sub';
 
@@ -716,7 +717,7 @@ class Builder
      *
      * @return $this
      */
-    public function whereExists(Closure $callback, $boolean = 'and', $not = false)
+    public function whereExists($callback, $boolean = 'and', $not = false)
     {
         $type = $not ? 'NotExists' : 'Exists';
 
@@ -742,7 +743,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function orWhereExists(Closure $callback, $not = false)
+    public function orWhereExists($callback, $not = false)
     {
         return $this->whereExists($callback, 'or', $not);
     }
@@ -755,7 +756,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function whereNotExists(Closure $callback, $boolean = 'and')
+    public function whereNotExists($callback, $boolean = 'and')
     {
         return $this->whereExists($callback, $boolean, true);
     }
@@ -767,7 +768,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function orWhereNotExists(Closure $callback)
+    public function orWhereNotExists($callback)
     {
         return $this->orWhereExists($callback, true);
     }
@@ -910,7 +911,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function whereDate($column, $operator, $value, $boolean = 'and')
+    public function whereDate($column, $operator, $value = null, $boolean = 'and')
     {
         return $this->addDateBasedWhere('Date', $column, $operator, $value, $boolean);
     }
@@ -925,7 +926,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function whereDay($column, $operator, $value, $boolean = 'and')
+    public function whereDay($column, $operator, $value = null, $boolean = 'and')
     {
         return $this->addDateBasedWhere('Day', $column, $operator, $value, $boolean);
     }
@@ -940,7 +941,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function whereMonth($column, $operator, $value, $boolean = 'and')
+    public function whereMonth($column, $operator, $value = null, $boolean = 'and')
     {
         return $this->addDateBasedWhere('Month', $column, $operator, $value, $boolean);
     }
@@ -955,7 +956,7 @@ class Builder
      *
      * @return \Vinelab\NeoEloquent\Query\Builder|static
      */
-    public function whereYear($column, $operator, $value, $boolean = 'and')
+    public function whereYear($column, $operator, $value = null, $boolean = 'and')
     {
         return $this->addDateBasedWhere('Year', $column, $operator, $value, $boolean);
     }
@@ -1047,7 +1048,7 @@ class Builder
      *
      * @return $this
      */
-    public function groupBy()
+    public function groupBy(...$groups)
     {
         foreach (func_get_args() as $arg) {
             $this->groups = array_merge((array) $this->groups, is_array($arg) ? $arg : [$arg]);
@@ -1365,7 +1366,7 @@ class Builder
      *
      * @deprecated since version 5.1.
      */
-    public function pluck($column)
+    public function pluck($column, $key = null)
     {
         return $this->value($column);
     }
@@ -1431,7 +1432,7 @@ class Builder
      *
      * @return \Illuminate\Contracts\Pagination\Paginator
      */
-    public function simplePaginate($perPage = 15, $columns = ['*'], $pageName = 'page')
+    public function simplePaginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
     {
         $page = Paginator::resolveCurrentPage($pageName);
 
@@ -1746,7 +1747,7 @@ class Builder
      *
      * @return array
      */
-    protected function cleanBindings(array $bindings)
+    public function cleanBindings(array $bindings)
     {
         return array_values(array_filter($bindings, function ($binding) {
             return !$binding instanceof Expression;
@@ -1803,7 +1804,7 @@ class Builder
      *
      * @return $this
      */
-    public function mergeBindings(Builder $query)
+    public function mergeBindings(BaseBuilder $query)
     {
         $this->bindings = array_merge_recursive($this->bindings, $query->bindings);
 
